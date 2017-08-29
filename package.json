@@ -13,6 +13,10 @@
     "notifier",
     "notify"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nabbl/google-home-notifier"
+  },
   "license": "MIT",
   "dependencies": {
     "castv2-client": "^1.2.0",
