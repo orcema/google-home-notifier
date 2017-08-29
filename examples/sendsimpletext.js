@@ -1,5 +1,5 @@
-var googlehomenotifier = require('../')("192.168.178.131", "de-DE", 1);
+var googlehomenotifier = require('../')("192.168.178.131", "en-US", 1);
 
-googlehomenotifier.notify("Freue mich auf dich", function (result) {
+googlehomenotifier.notify("Some crazy textmessage", function (result) {
   console.log(result);
 })
