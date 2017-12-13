@@ -1,3 +1,5 @@
+'use strict';
+
 var Client = require('castv2-client').Client;
 const EventEmitter = require('events');
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
