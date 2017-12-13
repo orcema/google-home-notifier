@@ -4,7 +4,7 @@ var Client = require('castv2-client').Client;
 const EventEmitter = require('events');
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 var Googletts = require('google-tts-api');
-var ping = require('ping');
+var net = require('net');
 
 function GoogleHomeNotifier(deviceip, language, speed) {
 
@@ -28,7 +28,7 @@ function GoogleHomeNotifier(deviceip, language, speed) {
   };
 
   var getSpeechUrl = function (text, host, callback) {
-    Googletts(text, language, this.speed).then(function (url) {
+    Googletts(text, language, 1).then(function (url) {
       onDeviceUp(host, url, function (res) {
         callback(res);
       });
@@ -45,27 +45,27 @@ function GoogleHomeNotifier(deviceip, language, speed) {
 
   var onDeviceUp = function (host, url, callback) {
     var client = new Client();
-    ping.sys.probe(host, function (isAlive) {
-      if (isAlive) {
-        client.connect(host, function () {
-          client.launch(DefaultMediaReceiver, function (err, player) {
-            var media = {
-              contentId: url,
-              contentType: 'audio/mp3',
-              streamType: 'BUFFERED' // or LIVE
-            };
-            player.load(media, {
-              autoplay: true
-            }, function (err, status) {
-              client.close();
-              callback('Device notified');
-            });
+    var clienttcp = new net.Socket();
+    clienttcp.connect(8009, host, function () {
+      client.connect(host, function () {
+        client.launch(DefaultMediaReceiver, function (err, player) {
+          var media = {
+            contentId: url,
+            contentType: 'audio/mp3',
+            streamType: 'BUFFERED' // or LIVE
+          };
+          player.load(media, {
+            autoplay: true
+          }, function (err, status) {
+            client.close();
+            callback('Device notified');
           });
         });
-      } else {
-        emitter.emit("error", new Error('ERROR: Device not reachable'));
-        callback('ERROR: Device not reachable');
-      };
+      });
+    });
+    clienttcp.on('error', function (error) {
+      emitter.emit("error", error);
+      callback('ERROR: Device not reachable');
     });
 
     client.on('error', function (err) {
@@ -74,7 +74,9 @@ function GoogleHomeNotifier(deviceip, language, speed) {
       emitter.emit("error", err)
     });
   };
-}
+
+
+};
 
 GoogleHomeNotifier.prototype.__proto__ = EventEmitter.prototype // inherit from EventEmitter
 
