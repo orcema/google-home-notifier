@@ -2,7 +2,7 @@ var Client = require('castv2-client').Client;
 const EventEmitter = require('events');
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 var Googletts = require('google-tts-api');
-class MyEmitter extends EventEmitter {}
+var ping = require('ping');
 
 function GoogleHomeNotifier(deviceip, language, speed) {
 
@@ -10,9 +10,7 @@ function GoogleHomeNotifier(deviceip, language, speed) {
   this.language = language;
   this.speed = speed;
 
-
-  const emitter = new MyEmitter();
-  // this.emitters       = [ this ];
+  var emitter = this;
 
 
   this.notify = function (message, callback) {
@@ -45,20 +43,27 @@ function GoogleHomeNotifier(deviceip, language, speed) {
 
   var onDeviceUp = function (host, url, callback) {
     var client = new Client();
-    client.connect(host, function () {
-      client.launch(DefaultMediaReceiver, function (err, player) {
-        var media = {
-          contentId: url,
-          contentType: 'audio/mp3',
-          streamType: 'BUFFERED' // or LIVE
-        };
-        player.load(media, {
-          autoplay: true
-        }, function (err, status) {
-          client.close();
-          callback('Device notified');
+    ping.sys.probe(host, function (isAlive) {
+      if (isAlive) {
+        client.connect(host, function () {
+          client.launch(DefaultMediaReceiver, function (err, player) {
+            var media = {
+              contentId: url,
+              contentType: 'audio/mp3',
+              streamType: 'BUFFERED' // or LIVE
+            };
+            player.load(media, {
+              autoplay: true
+            }, function (err, status) {
+              client.close();
+              callback('Device notified');
+            });
+          });
         });
-      });
+      } else {
+        emitter.emit("error", new Error('ERROR: Device not reachable'));
+        callback('ERROR: Device not reachable');
+      };
     });
 
     client.on('error', function (err) {
