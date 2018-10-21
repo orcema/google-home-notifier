@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Daniel Kappler",
+  "author": "Orce MARINKOVSKI",
   "keywords": [
     "google home",
     "notifications",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nabbl/google-home-notifier"
+    "url": "git+https://github.com/orcema/google-home-notifier.git"
   },
   "license": "MIT",
   "dependencies": {
