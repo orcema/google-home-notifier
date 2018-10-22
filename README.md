@@ -1,4 +1,7 @@
-# google-home-notifier
+# google-home-notifier-VolumeAdjustable
+This is a fork of the google-home-notifier-library:
+<a href="https://github.com/nabbl/google-home-notifier">google-home-notifier Fork</a>
+
 Send notifications to Google Home
 
 #### Installation
@@ -15,13 +18,17 @@ googlehome.accent('us'); // optional: 'us'= american voice (default), 'uk'= brit
 googlehome.notify('Hey Foo', function(res) {
   console.log(res);
 });
+googlehome.setEmitVolume(pctVolume,function(){
+    // code to be executed after emit volume has been set
+});
+// note, the emit volume level has to be set only once. When notification is played the volume will be set to the saved emit level and after notification reset to it's initial level
 ```
 
 #### Listener
 If you want to run a listener, take a look at the example.js file. You can run this from a Raspberry Pi, pc or mac. The example uses ngrok so the server can be reached from outside your network. I tested with ifttt.com Maker channel and it worked like a charm.
 
 ```sh
-$ git clone https://github.com/noelportugal/google-home-notifier
+$ git clone https://github.com/orcema/google-home-notifier
 $ cd google-home-notifier
 $ npm install
 $ node example.js

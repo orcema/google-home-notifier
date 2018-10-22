@@ -1,6 +1,6 @@
 {
-  "name": "google-home-notify",
-  "version": "0.0.3",
+  "name": "google-home-notifier-volume-adjustable",
+  "version": "0.0.8",
   "description": "",
   "main": "google-home-notifier.js",
   "scripts": {
